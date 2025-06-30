@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: rabbitmq:latest
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+    volumes:
+      - /project/data/rabbitmq/lib:/var/lib/rabbitmq/
+      - /project/data/rabbitmq/log:/var/log/rabbitmq
+      - ./config/enabled_plugins:/etc/rabbitmq/enabled_plugins:ro

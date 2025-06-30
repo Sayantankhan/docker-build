@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  redis-master:
+    image: redis:latest
+    container_name: redis-master
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - /project/data/redis-master:/data
+    command: >
+      redis-server --appendonly yes
+    networks:
+      - redis-net
+
+  redis-replica:
+    image: redis:latest
+    container_name: redis-replica
+    restart: always
+    depends_on:
+      - redis-master
+    ports:
+      - "6380:6379"
+    volumes:
+      - /project/data/redis-replica:/data
+    command: >
+      redis-server --replicaof redis-master 6379 --appendonly yes
+    networks:
+      - redis-net
+
+  redis-sentinel:
+    image: redis:latest
+    container_name: redis-sentinel
+    restart: always
+    depends_on:
+      - redis-master
+    ports:
+      - "26379:26379"
+    volumes:
+      - ./sentinel.conf:/data/sentinel.conf
+      - /project/data/sentinel:/data  
+    networks:
+      - redis-net
+    command: >
+      redis-server /data/sentinel.conf --sentinel
+
+networks:
+  redis-net:

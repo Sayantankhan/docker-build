@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  code-server:
+    build: .
+    container_name: code-server
+    ports:
+      - "8085:8080"
+    volumes:
+      - /project/docker/code-server/config.yaml:/home/coder/.config/code-server/config.yaml
+      - /project/data/code/:/home/coder/project
+    restart: unless-stopped
+
