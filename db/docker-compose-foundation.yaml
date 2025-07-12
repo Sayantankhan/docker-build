@@ -1,0 +1,14 @@
+version: '3.7'
+services:
+  fdb:
+    build: .
+    network_mode: host
+    init: true
+    entrypoint: ["/usr/bin/fdbmonitor"]
+    environment:
+      - FDB_PORT=4500
+    ports:
+      - "4500:4500/tcp"        # FDB server port
+    volumes:
+      - ./foundationdb.conf:/etc/foundationdb/foundationdb.conf
+      - /project/data/foundationdb:/var/lib/foundationdb/data/4500
